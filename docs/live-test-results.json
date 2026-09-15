@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-09-15T07:46:55.178728+00:00",
+  "url": "https://lotline.web.app",
+  "checks": [
+    "Two live email/password accounts can sign up and sign back in",
+    "Registered inventory starts empty",
+    "Synthetic CSV import persists",
+    "Second registered account cannot see first account inventory",
+    "Unauthenticated inventory access rejected",
+    "Sign-out revokes browser session access"
+  ],
+  "identitiesDeleted": 2,
+  "databaseCleanupPending": false,
+  "syntheticInventoryDocumentsDeleted": 2
+}
