@@ -1,0 +1,10 @@
+SIMULATED TRAINING NOTICE - NOT A REAL RECALL
+Reference: DEMO-2026-014
+Manufacturer: Northstar Medical (fictional)
+Product: Sterile syringe, 10 mL
+Catalog: LL-SYR-10
+Affected individual-unit lot: SY2608-A
+
+Potential sterile barrier defect. Inspect individual package labels. Stop distribution and segregate affected stock. Return affected unused units to the fictional supplier with a quantity receipt. Other packaging levels are not specified. No patient data is required.
+
+This exercise covers unused on-hand stock only. Already-used stock, patient notification and clinical decisions require an authorized clinical process outside this MVP.

@@ -1,0 +1,3 @@
+id,product,manufacturer,catalog,gtin,lot,location,quantity,unit
+IMPORT-001,Sterile syringe 10 mL,Northstar Medical (fictional),LL-SYR-10,,SY2608-A,Lakeside,10,each
+IMPORT-002,Sterile syringe 10 mL,Northstar Medical (fictional),LL-SYR-10,,,Lakeside,5,each
