@@ -29,6 +29,7 @@ export type Recall = {
   approvedAt: string;
   simulated: boolean;
   closedAt?: string;
+  closedStock?: Stock[];
   closureNote?: string;
 };
 export type Movement = {
@@ -185,6 +186,9 @@ export function quantities(w: Workspace, recallId: string, stockId: string) {
     .reduce((n, m) => n + m.quantity, 0);
   return { quarantined, disposed, held: quarantined - disposed };
 }
+export function responseStock(w: Workspace, r: Recall) {
+  return r.closedAt && r.closedStock ? r.closedStock : w.stock;
+}
 export function summary(w: Workspace, r: Recall) {
   let affected = 0,
     review = 0,
@@ -192,7 +196,7 @@ export function summary(w: Workspace, r: Recall) {
     quarantined = 0,
     disposed = 0;
   const locations = new Set<string>();
-  for (const s of w.stock) {
+  for (const s of responseStock(w, r)) {
     const a = assess(s, r);
     if (a.status === "affected") {
       affected += s.quantity;
@@ -212,7 +216,7 @@ export function summary(w: Workspace, r: Recall) {
     quarantined,
     disposed,
     locations: locations.size,
-    canClose: w.stock.length > 0 && review === 0 && disposed === affected,
+    canClose: responseStock(w, r).length > 0 && review === 0 && disposed === affected,
   };
 }
 export function parseGs1(raw: string): {

@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-15T07:20:11.004Z",
+  "checkedAt": "2026-09-15T07:28:05.528Z",
   "checks": [
     "Email sign-up creates a genuinely empty inventory workspace",
     "Custom inventory import persists after reload before any recall exists",

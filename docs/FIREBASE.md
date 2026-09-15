@@ -90,7 +90,7 @@ Firestore free-quota eligibility is project-dependent. Do not assume the named `
 
 ## Deploy updates
 
-Update the checkout and rerun the same command with the same project and site. Reusing the same project preserves the database and registered identities; review any application data migration before deploying it. The script does not intentionally reset existing workspaces during an update.
+Update the checkout and rerun the same command with the same project and site. Reusing the same project preserves the database and registered identities; review any application data migration before deploying it. The script does not reset existing workspaces during an update. Completed responses retain their own inventory snapshots while new stock can be appended for later responses.
 
 A failed smoke check may happen after the new Cloud Run revision or Hosting version is already published. Failure is not a rollback. Read the error and logs, correct the issue, and redeploy. Avoid restarting with another project merely to bypass a setup error.
 

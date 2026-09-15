@@ -199,6 +199,14 @@ assert.equal(csv.status(), 200);
 assert.match(await csv.text(), /STK-001/);
 check("CSV reconciliation export");
 state = await read();
+const append = await post({type:"import",csv:"id,product,manufacturer,catalog,gtin,lot,location,quantity,unit\nLATER-01,Later delivery,Northstar Medical (fictional),LL-SYR-10,,SY2608-A,Later location,5,each"},state.revision);
+assert.equal(append.status(),200);
+const frozen = await (await ctx.request.get(base+"/api/export?recall=DEMO-014")).json();
+assert.equal(frozen.packet.inventory.length,4);
+assert.equal(frozen.packet.summary.affected,76);
+assert.equal((await read()).workspace.stock.length,5);
+check("later inventory imports preserve completed response snapshots and exports");
+state = await read();
 await post({ type: "reset", confirmed: true }, state.revision);
 state = await read();
 const movement = {
@@ -302,7 +310,7 @@ await writeFile(
     {
       testedAt: new Date().toISOString(),
       environment: firebase ? "Standalone Next.js with Firebase Auth and Firestore emulators" : "Local Vinext with D1 and loopback auth simulator",
-      coreTests: 48,
+      coreTests: 49,
       browserChecks: checks,
       errors,
       limitations: [

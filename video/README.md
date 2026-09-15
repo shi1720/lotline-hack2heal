@@ -1,25 +1,10 @@
-# Lotline — ready-to-narrate demo
+# Lotline product demo
 
-The supplied **lotline-silent-demo.mp4** is a real three-minute screen recording of the tested application. It has no voice track. All stock, clinics, notices and physical actions shown are fictional.
+**lotline-narrated-demo.mp4** is the current 3:43 product walkthrough. It includes neutral synthetic narration and clear bottom subtitles, in 1600×900 H.264/AAC format. The video shows the actual application with Firebase Authentication and Firestore emulators; all accounts, stock, notices, receipts and physical actions are fictional.
 
-## Record your voice
+- `demo-narration.md`: verbatim narration and scene times.
+- `lotline-demo-captions.srt`: editable timed captions.
+- `youtube-description.txt`: prepared YouTube description and chapters.
+- `demo-evidence.json`: the synthetic 76-unit response exported during recording.
 
-1. Open the video in a player and the **../submission/lotline-recording-guide.pdf** beside it.
-2. Read **../submission/demo-script-3min.md** word for word. Spoken sections start at 0:00, 0:25, 0:50, 1:20, 2:05 and 2:35. Leave natural pauses while the UI actions occur.
-3. Record in a quiet room with a phone or microphone. Start the narration at video time zero. Save your voice as WAV or M4A.
-4. Add the voice recording to the video in your usual editor. Import **../submission/lotline-demo-captions.srt** and adjust cue times to your actual narration. Do not speed through the verification/evidence sequence.
-5. Export 1080p or the source resolution, H.264 MP4. Listen to the complete exported file before uploading to YouTube or Vimeo. Devpost’s embedded video field accepts those hosted URLs.
-
-No video is required by the currently published preliminary-round requirements; it is supporting material. The official-template PDF remains the required submission artifact.
-
-## Optional local combination with FFmpeg
-
-Run from this directory, replacing the voice filename with your recording. This preserves the screen video and pads the voice track to exactly three minutes:
-
-```sh
-ffmpeg -i lotline-silent-demo.mp4 -i voiceover.m4a -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 192k -af apad -t 180 -movflags +faststart lotline-narrated-demo.mp4
-```
-
-Do not run the command against the only copy of your original recording. If the narration runs beyond three minutes, edit its timing before using the fixed-duration command.
-
-**demo-evidence.json** is the matching synthetic completed response exported during this recording, with 76 units accounted for. It is not an actual recall response.
+The older silent recording is retained outside the repository as an earlier draft. Use the narrated recording for sharing.

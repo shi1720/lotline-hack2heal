@@ -70,6 +70,7 @@ import {
   assess,
   quantities,
   summary,
+  responseStock,
   parseCsv,
   parseGs1,
   seed,
@@ -363,7 +364,7 @@ export default function Workbench({scope="demo",signInPath="/signin-with-chatgpt
       return {
         reference: r.reference,
         summary: totals,
-        unresolved: w.stock
+        unresolved: responseStock(w, r)
           .filter((s) => assess(s, r).status === "review")
           .map((s) => ({
             id: s.id,
@@ -407,7 +408,7 @@ export default function Workbench({scope="demo",signInPath="/signin-with-chatgpt
         )}
       </div>
     );
-  const filtered = w.stock.filter((s) => {
+  const filtered = responseStock(w, r).filter((s) => {
     const a = assess(s, r);
     return (
       (filter === "all" || a.status === filter) &&
@@ -566,7 +567,7 @@ export default function Workbench({scope="demo",signInPath="/signin-with-chatgpt
                       <h2>Inventory in scope</h2>
                     </div>
                     <span className="neutral-badge">
-                      {w.stock.length} records
+                      {responseStock(w, r).length} records
                     </span>
                   </div>
                   <div className="stock-toolbar">

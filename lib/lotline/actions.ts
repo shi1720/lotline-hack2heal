@@ -96,6 +96,10 @@ export async function applyAction(
     return original;
   }
   let w = structuredClone(original);
+  // Preserve pre-snapshot completed records before the live inventory can change.
+  for (const recall of w.recalls) {
+    if (recall.closedAt && !recall.closedStock) recall.closedStock = structuredClone(w.stock);
+  }
   let detail = "";
   if (action.type === "reset") {
     w = seed(actor, now);
@@ -109,21 +113,16 @@ export async function applyAction(
       throw new DomainError(
         "An imported stock id already exists. Nothing was imported.",
       );
-    if (w.recalls.some((r) => r.closedAt))
-      throw new DomainError(
-        "This evaluation contains a completed response. Start a fresh evaluation before importing a new stock snapshot.",
-      );
     w.stock.push(...rows);
     detail = `Imported ${rows.length} records (${rows.reduce((s, r) => s + r.quantity, 0)} individual units).`;
   } else if (action.type === "verify") {
     const s = w.stock.find((s) => s.id === action.stockId);
     if (!s) throw new DomainError("Stock record not found.", 404);
     if (
-      w.recalls.some((r) => r.closedAt) ||
       w.movements.some((m) => m.stockId === s.id)
     )
       throw new DomainError(
-        "Labels cannot change after physical actions or a completed response. Preserve the evidence and start a corrected evaluation.",
+        "Labels cannot change after physical actions. Preserve the evidence and review a correction with the responsible operator.",
       );
     const before = {
       catalog: s.catalog,
@@ -186,6 +185,7 @@ export async function applyAction(
         throw new DomainError(
           `Cannot complete: ${totals.review} units need verification and ${totals.affected - totals.disposed} affected units need disposition.`,
         );
+      r.closedStock = structuredClone(w.stock);
       r.closedAt = now;
       r.closureNote = action.note;
       detail = `Completed local response ${r.reference}. ${totals.affected} affected units accounted for. Reviewer attested stock coverage and location checks. ${action.note}`;

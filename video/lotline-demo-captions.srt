@@ -1,0 +1,191 @@
+1
+00:00:00,000 --> 00:00:03,526
+A recall alert can reach a clinic in seconds.
+
+2
+00:00:03,526 --> 00:00:05,876
+But it cannot inspect a stockroom.
+
+3
+00:00:05,876 --> 00:00:09,010
+Someone still needs to find the right lot,
+
+4
+00:00:09,010 --> 00:00:12,535
+resolve missing labels, and account for every affected unit.
+
+5
+00:00:12,535 --> 00:00:16,453
+Lotline turns that unfinished work into a clear response record.
+
+6
+00:00:22,000 --> 00:00:26,357
+Sign in with an email account to use your own inventory.
+
+7
+00:00:26,357 --> 00:00:27,941
+The workspace starts empty.
+
+8
+00:00:27,941 --> 00:00:31,110
+Import a stock CSV, review the original recall
+
+9
+00:00:31,110 --> 00:00:34,675
+notice, and approve its exact product and lot scope.
+
+10
+00:00:34,675 --> 00:00:39,428
+Your records are saved to your account, separately from the sample demo.
+
+11
+00:00:39,428 --> 00:00:41,408
+No patient information is needed.
+
+12
+00:00:48,000 --> 00:00:52,362
+For this walkthrough, we will switch to fictional sample stock.
+
+13
+00:00:52,362 --> 00:00:54,979
+Sixty-four units match the reviewed recall.
+
+14
+00:00:54,979 --> 00:00:57,160
+Twelve have no recorded lot.
+
+15
+00:00:57,160 --> 00:00:59,777
+Thirty are outside this specific scope.
+
+16
+00:00:59,777 --> 00:01:03,266
+Those twelve unknown units stay open for investigation.
+
+17
+00:01:03,266 --> 00:01:05,883
+Missing information never becomes an all-clear.
+
+18
+00:01:09,000 --> 00:01:13,247
+The source snapshot shows exactly what was reviewed: one product,
+
+19
+00:01:13,247 --> 00:01:17,070
+one lot, and instructions authorizing return to the supplier.
+
+20
+00:01:17,070 --> 00:01:20,892
+Lotline can look up FDA references, but a person
+
+21
+00:01:20,892 --> 00:01:24,714
+must verify the current notice and approve the scope.
+
+22
+00:01:24,714 --> 00:01:27,687
+The software does not invent removal instructions.
+
+23
+00:01:30,000 --> 00:01:36,266
+Here, a stockroom check confirms that all twelve unlabelled records belong to the affected lot.
+
+24
+00:01:36,266 --> 00:01:40,444
+We enter the package identifier and retain a verification reference.
+
+25
+00:01:40,444 --> 00:01:45,875
+Saving the check updates the assessment to seventy-six affected units, with zero unresolved.
+
+26
+00:01:45,875 --> 00:01:49,217
+Every change is recorded in the activity history.
+
+27
+00:01:54,000 --> 00:01:57,631
+Now the response moves from identification to accountability.
+
+28
+00:01:57,631 --> 00:02:01,262
+For each affected stock record, we enter the
+
+29
+00:02:01,262 --> 00:02:04,893
+quantity placed in quarantine and the supporting reference.
+
+30
+00:02:04,893 --> 00:02:08,979
+Then we record the supplier return and its receipt.
+
+31
+00:02:08,979 --> 00:02:14,425
+The server prevents disposition from exceeding quarantine, and quarantine from exceeding stock.
+
+32
+00:02:14,425 --> 00:02:16,695
+Repeated submissions cannot double-count units.
+
+33
+00:02:16,695 --> 00:02:20,326
+These are fictional actions for this demonstration; in
+
+34
+00:02:20,326 --> 00:02:24,411
+use, staff must verify the physical handling and evidence.
+
+35
+00:02:38,000 --> 00:02:43,153
+Once all seventy-six affected units have disposition records, completion becomes available.
+
+36
+00:02:43,153 --> 00:02:48,775
+A reviewer must confirm inventory coverage, notice amendments, and the final records.
+
+37
+00:02:48,775 --> 00:02:51,118
+Completing the response locks it.
+
+38
+00:02:51,118 --> 00:02:54,865
+This closes the local stock response; it does
+
+39
+00:02:54,865 --> 00:02:59,082
+not terminate a regulatory recall or certify product safety.
+
+40
+00:03:02,000 --> 00:03:08,424
+The evidence packet brings the source, reviewed scope, stock assessment, actions, and activity together.
+
+41
+00:03:08,424 --> 00:03:13,472
+Download JSON or a reconciliation CSV, or print the response record.
+
+42
+00:03:13,472 --> 00:03:15,766
+Checksums help verify file consistency.
+
+43
+00:03:15,766 --> 00:03:19,437
+The same account and workflow work on a
+
+44
+00:03:19,437 --> 00:03:23,567
+phone, so records remain accessible where the stock is.
+
+45
+00:03:26,000 --> 00:03:29,535
+Lotline is created by Shivam Gupta for the practical
+
+46
+00:03:29,535 --> 00:03:33,069
+work between a recall alert and a documented response.
+
+47
+00:03:33,069 --> 00:03:38,174
+Try the sample demo, or sign in and test your own nonpatient inventory.
+
+48
+00:03:38,174 --> 00:03:40,138
+Every unit needs an answer.

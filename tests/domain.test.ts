@@ -461,3 +461,19 @@ test("bounded body reader rejects malformed UTF-8", async () => {
   });
   await assert.rejects(() => readBody(req), /UTF-8/);
 });
+
+
+test("new imports and unused-label corrections preserve completed stock snapshots", async () => {
+  let w = seed("Reviewer", now);
+  // A separate unaffected scope can complete without fictitious physical handling.
+  w.recalls[0].lots = ["OTHER-LOT"];
+  w.stock[2].lot = "KNOWN-OTHER";
+  w = await act(w, {type:"close",recallId:"DEMO-014",note:"All known labels outside this reviewed scope.",attested:true});
+  const before = summary(w,w.recalls[0]);
+  w = await act(w,{type:"import",csv:"id,product,manufacturer,catalog,gtin,lot,location,quantity,unit\nNEXT-1,Next stock,Northstar Medical (fictional),LL-SYR-10,,OTHER-LOT,New site,5,each"});
+  assert.equal(w.stock.length,5);
+  assert.deepEqual(summary(w,w.recalls[0]),before);
+  w = await act(w,{type:"verify",stockId:"STK-004",manufacturer:"Northstar Medical (fictional)",catalog:"LL-SYR-10",gtin:"",lot:"OTHER-LOT",evidence:"New verified label reference after the prior snapshot."});
+  assert.deepEqual(summary(w,w.recalls[0]),before);
+  assert.equal(w.recalls[0].closedStock?.find(s=>s.id==="STK-004")?.lot,"SY2608-B");
+});

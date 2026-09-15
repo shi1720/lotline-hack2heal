@@ -7,6 +7,8 @@ import {
   summary,
   hash,
   csvCell,
+  DomainError,
+  responseStock,
 } from "@/lib/lotline/domain";
 export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
@@ -25,7 +27,7 @@ export async function GET(request: Request) {
     const r = w.recalls.find((r) => r.id === params.get("recall"));
     if (!r)
       return Response.json({ error: "Recall not found." }, { status: 404 });
-    const rows = w.stock.map((s) => ({
+    const rows = responseStock(w, r).map((s) => ({
       ...s,
       ...assess(s, r),
       ...quantities(w, r.id, s.id),
@@ -95,7 +97,8 @@ export async function GET(request: Request) {
         },
       },
     );
-  } catch {
+  } catch (error) {
+    if (error instanceof DomainError) return Response.json({error:error.message},{status:error.status,headers:{"Cache-Control":"no-store"}});
     return Response.json(
       { error: "Export unavailable. Please retry when storage is available." },
       { status: 503 },

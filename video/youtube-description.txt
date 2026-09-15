@@ -1,0 +1,29 @@
+A recall alert cannot inspect a stockroom. Lotline helps clinic operations teams turn a reviewed medical-device recall notice into an accountable stock response.
+
+Created by Shivam Gupta.
+Source code and Firebase deployment: https://github.com/shi1720/lotline-hack2heal
+
+In this walkthrough:
+• Email sign-in and a separate workspace for your own inventory
+• CSV stock import and human-reviewed recall scope
+• Missing lot numbers that stay unresolved until verified
+• Quantity-controlled quarantine and permitted supplier return
+• Completion review, activity history, and JSON/CSV/printable evidence
+• Responsive desktop and mobile workflows
+
+Chapters
+0:00 An alert is only the beginning
+0:22 Your own inventory
+0:48 Uncertainty stays visible
+1:09 Review the source
+1:30 Verify the package label
+1:54 Account for physical actions
+2:38 Completion is earned
+3:02 Keep a reviewable record
+3:26 Every unit needs an answer
+
+This is an actual application recording using Firebase emulators and fictional stock, locations, notices, receipts, and actions. No patient data or physical handling is shown. Narration is a neutral synthetic voice; subtitles are included.
+
+Lotline supports unused medical-device inventory and operator-attested response records. It does not provide clinical advice, certify product safety, or terminate a regulatory recall. The source notice and real-world actions require human verification.
+
+#InventoryManagement #HealthcareTechnology #RecallManagement

@@ -1,7 +1,7 @@
 {
-  "testedAt": "2026-09-15T07:18:42.716Z",
+  "testedAt": "2026-09-15T07:27:59.204Z",
   "environment": "Standalone Next.js with Firebase Auth and Firestore emulators",
-  "coreTests": 48,
+  "coreTests": 49,
   "browserChecks": [
     "closure blocked on unresolved and undisposed stock",
     "source snapshot view and modal dismissal",
@@ -12,6 +12,7 @@
     "76/76 disposition allows attested completion and locks response",
     "JSON export checksum, disposition totals and printable evidence report",
     "CSV reconciliation export",
+    "later inventory imports preserve completed response snapshots and exports",
     "concurrent writers: one commit, one 409, no double accounting",
     "unauthenticated and cross-origin requests rejected",
     "malformed and oversized requests rejected",

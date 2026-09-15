@@ -8,7 +8,7 @@ npm run typecheck
 npm run build
 ```
 
-**48 core tests passed** in the recorded local verification. They cover exact assessment, missing/placeholder identifiers, case-only mismatches, manufacturer/GTIN conflicts, GTIN checksum and packaging distinctions, GS1 parsing, CSV quoting and invalid units/quantities, import atomicity, uncertainty/completion gates, permitted disposition, quantity limits, edit locks, 200+ action replay, reused-key payload conflicts, a full 76-unit lifecycle, unsupported scope rejection, formula-safe CSV cells, and byte-bounded/chunked/invalid-UTF8 request handling.
+**49 core tests passed** in the recorded local verification. They cover exact assessment, missing/placeholder identifiers, case-only mismatches, manufacturer/GTIN conflicts, GTIN checksum and packaging distinctions, GS1 parsing, CSV quoting and invalid units/quantities, import atomicity, uncertainty/completion gates, permitted disposition, quantity limits, edit locks, 200+ action replay, reused-key payload conflicts, a full 76-unit lifecycle, unsupported scope rejection, formula-safe CSV cells, and byte-bounded/chunked/invalid-UTF8 request handling.
 
 The earlier independent review found three material classes of issue (disposition permissions, unsupported product/lot combinations, and replay expiry). The implemented guards and tests are regressions for those actual findings.
 
@@ -23,7 +23,7 @@ python3 -m unittest discover -s tests -p 'test_firebase_deploy.py'
 
 This builds the standalone Cloud Run application and runs it with real Firebase Authentication and named Firestore emulators. No cloud project or paid API key is needed. Port 8080/8180/9199 must be free. Emulator identities and records are disposable synthetic test data.
 
-The recorded Firebase run passed the same 16 browser/API checks below, plus 9 account/inventory checks: email sign-up, empty inventory, custom CSV persistence, human-reviewed custom recall and export, isolated demo/inventory modes, forbidden inventory reset, responsive layouts at 360/390/768/1440 px, logout and password-error recovery, cross-identity access denial, and generation of a password-reset action. Related assertions are grouped into the 9 checks. Password-reset emulator success does not verify real email delivery.
+The recorded Firebase run passed the same 17 browser/API checks below, plus 9 account/inventory checks: email sign-up, empty inventory, custom CSV persistence, human-reviewed custom recall and export, isolated demo/inventory modes, forbidden inventory reset, responsive layouts at 360/390/768/1440 px, logout and password-error recovery, cross-identity access denial, and generation of a password-reset action. Related assertions are grouped into the 9 checks. Password-reset emulator success does not verify real email delivery.
 
 ## Original Sites browser and API journey
 
@@ -36,7 +36,7 @@ npm run test:e2e
 
 The test uses loopback development sign-in and **resets that account's practice workspace**. It is deliberately restricted to localhost/127.0.0.1. Do not run it on an evaluation whose records you intend to keep. `LOTLINE_TEST_URL` can select a different loopback port. Live FDA reference lookup requires network access and may fail if the upstream is unavailable. Outputs go to ignored `test-results/`.
 
-The recorded run passed **16 browser/API checks**:
+The recorded run passed **17 browser/API checks**:
 
 1. Initial completion gate.
 2. Source snapshot modal.
@@ -54,6 +54,7 @@ The recorded run passed **16 browser/API checks**:
 14. Live FDA lookup without automatic scope approval.
 15. 390px mobile layout and label form.
 16. No page runtime errors.
+17. New imports leave completed response snapshots and exports unchanged.
 
 Local migrations were also applied twice to a fresh temporary D1 store: the first application succeeded and the second correctly found nothing to apply.
 

@@ -8,6 +8,8 @@ Created by **Shivam Gupta**, with AI-assisted development. See [acknowledgements
 
 ![Lotline recall response workspace](docs/assets/overview.png)
 
+[Watch the narrated product walkthrough](video/lotline-narrated-demo.mp4) · [Read the deployment guide](docs/FIREBASE.md)
+
 ## Start with the workflow
 
 1. **Try the demo.** Explore fictional stock in an anonymous workspace. No account or patient information is needed.
@@ -78,7 +80,7 @@ One catalog and/or one individual-unit GTIN for the same product, with exact enu
 
 The workflow covers **on-hand, unused stock**. It does not make treatment decisions or track patients and already-used devices. Operator evidence records what was reported; it does not independently confirm events in the stockroom or contact a supplier.
 
-Completed responses are locked. Stock labels cannot change after physical actions, and overlapping responses cannot both record movement for the same stock ID. Imports are blocked after completion to keep that snapshot consistent. A new inventory-cycle/archive workflow is not yet provided; use this release for a bounded response exercise. Workspace limits include 20 responses, 2,000 audit events, and bounded request and storage sizes.
+Completed responses are locked. Stock labels cannot change after physical actions, and overlapping responses cannot both record movement for the same stock ID. Completed responses preserve their inventory snapshot. You can append new stock and open another response without changing completed assessments. Workspace limits include 20 responses, 2,000 audit events, and bounded request and storage sizes.
 
 ## Accounts and data
 
