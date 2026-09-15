@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-09-15T07:20:11.004Z",
+  "checks": [
+    "Email sign-up creates a genuinely empty inventory workspace",
+    "Custom inventory import persists after reload before any recall exists",
+    "Source-reviewed custom recall assesses imported units and exports inventory evidence",
+    "Demo and inventory are isolated; demo reset cannot erase real inventory",
+    "360/390/768/1440px responsive workspaces and action dialogs",
+    "Logout removes server access; wrong password rejected; login restores records",
+    "A second anonymous identity cannot access registered inventory or its export",
+    "Password-reset flow issues a Firebase reset action (emulator; no email delivery claim)"
+  ],
+  "errors": [],
+  "environment": "Local production Next build with Auth + named Firestore emulators"
+}

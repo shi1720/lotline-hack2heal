@@ -50,3 +50,13 @@ playwright-report/
 test-results/
 
 *.tsbuildinfo
+
+# Firebase deployment staging and local state (never commit credentials).
+.firebase-build/
+.firebase-deploy-state.json
+deploy/firebase/node_modules/
+.firebase/
+firebase-debug.log*
+
+__pycache__/
+*-debug.log

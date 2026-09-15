@@ -2,125 +2,121 @@
 
 **Every unit needs an answer.**
 
-Lotline is an evaluation MVP for unused medical-device stock recalls at small US clinic groups. It turns a human-reviewed notice into an exact inventory assessment, keeps missing identifiers unresolved, records quarantine and permitted disposition, and exports an evidence packet.
+Lotline helps clinic operations teams turn a medical-device recall notice into an accountable inventory response. Review the source, identify affected stock, investigate missing identifiers, record quarantine and permitted disposition, and export the response record.
 
-Created by **Shivam Gupta** for **Hack2Heal 2.0** with substantial AI assistance. See [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md).
+Created by **Shivam Gupta**, with AI-assisted development. See [acknowledgements](ACKNOWLEDGEMENTS.md).
 
 ![Lotline recall response workspace](docs/assets/overview.png)
 
-## Open the project
+## Start with the workflow
 
-- [Live evaluation app](https://lotline-clinic-recall.sg127977958.chatgpt.site) — owner-private; judge access has not been enabled.
-- [Three-minute silent demo](video/lotline-silent-demo.mp4) — real UI recording, ready for the supplied narration.
-- [Pitch PDF](submission/lotline-pitch.pdf) and [editable PowerPoint](submission/lotline-pitch.pptx) — supplemental draft awaiting the mandatory organizer template.
-- [Recording guide](submission/lotline-recording-guide.pdf), [verbatim script](submission/demo-script-3min.md) and [captions](submission/lotline-demo-captions.srt).
+1. **Try the demo.** Explore fictional stock in an anonymous workspace. No account or patient information is needed.
+2. **Create an account.** Use email and password to return to your records across devices. Password reset is available from sign-in.
+3. **Open your inventory workspace.** Registered users can switch to a separate, clean workspace for their own nonpatient inventory. The demo remains separate.
+4. **Review a notice.** Confirm the manufacturer, supported product identifiers, exact affected lots, and permitted action against the source.
+5. **Account for the stock.** Resolve missing labels, record quarantine and permitted return or destruction, then complete the final review when quantities reconcile.
+6. **Keep the evidence.** Export JSON, stock CSV, or a printable response record.
 
-## Why it exists
+Lotline works on desktop and mobile. Each account owns its records; shared organization memberships and staff roles are not implemented.
 
-An alert cannot inspect a stockroom. A clinic still has to locate the right product and lot, investigate incomplete records, account for affected units, and document the response. Lotline makes the unfinished work explicit.
+## What makes the response reviewable
 
-The fictional demo begins with **64 affected units, 12 units with no recorded lot, and 30 units outside the reviewed scope**. Verify the 12 labels, record quarantine and return of all 76 affected units, then complete the response. A missing lot never becomes an all-clear.
+- **Explicit uncertainty.** Missing or conflicting identifiers stay visible for investigation. “Outside this reviewed scope” is not a general statement that a product is safe.
+- **Deterministic assessment.** Product and lot comparisons use inspectable rules. An optional FDA lookup supplies reference material; a person approves the scope.
+- **Source-permitted action.** A return-only response cannot be completed by recording destruction. Disposition cannot exceed quarantine, and quarantine cannot exceed stock.
+- **Consistent updates.** Server-side validation, revision checks, and request deduplication prevent conflicting writes and repeated action submissions from silently changing totals.
+- **A complete record.** Evidence exports include the reviewed scope, stock, recorded actions, and activity history. SHA-256 checksums help check file consistency; they are not signatures or independent proof of physical handling.
 
-## Implemented
+## Deploy to Firebase
 
-- Account-scoped persistent workspaces in Cloudflare D1, protected by Sites sign-in.
-- Atomic CSV validation and import, limited to 500 stock records per workspace.
-- Exact manufacturer/product/lot assessment with three explicit states: affected, needs review, outside reviewed scope.
-- Supported GS1 text parsing and GTIN check-digit validation, preserving leading zeroes.
-- Optional live FDA device recall lookup, with the original source and retrieval timestamp. Lookup never approves scope automatically.
-- Human-approved single-product scope, exact lots or explicit all-lots, and source-authorized return or destruction.
-- Server-enforced quantity conservation. Disposition cannot exceed quarantine. Unknown records cannot receive physical actions.
-- Completion gate, inventory coverage attestation, and locked completed responses.
-- Optimistic concurrency, lifetime request deduplication, payload-conflict checks, bounded request streaming, and account ownership predicates.
-- JSON evidence packets with a SHA-256 digest and audit hash chain, spreadsheet-safe CSV exports, and printable PDF view.
-- Responsive keyboard-accessible UI with error recovery, source review, activity history and scoped search.
-- Optional WebMCP read/stage tools. Physical actions still require a person to complete the form.
-
-## Run locally
-
-Requires Node.js 22.13+ and npm. No paid API key is required for the core workflow.
+Open **Google Cloud Shell**, select a **billing-enabled project**, and run this single command (no checkout required):
 
 ```sh
-npm ci
-npm run build
-npm run db:migrate:local
-npm run dev
+bash <(curl -fsSL https://raw.githubusercontent.com/shi1720/lotline-hack2heal/main/scripts/deploy-firebase.sh)
 ```
 
-Open the exact local URL printed by the server (normally `http://localhost:5173`). Use its Sign in with ChatGPT flow. The starter simulates a test identity **only on loopback development requests**. It does not use real credentials.
-
-The production app uses the Sites authentication gateway. **Do not expose the local development server or raw Worker directly to the public internet:** identity headers are trusted only behind that gateway. See [security model](docs/SECURITY.md).
-
-The database is local under ignored `.wrangler/state/` during development. Hosted workspaces use D1. Browser storage is not the authoritative database.
+From an existing checkout:
 
 ```sh
-npm test
-npm run typecheck
-npm run build
+bash scripts/deploy-firebase.sh
 ```
 
-`npm test` exercises the actual matching engine and reducer, including all three adversarial review regressions. Browser/API verification and its reproducible script are documented in [TESTING.md](docs/TESTING.md).
+Or choose the project explicitly:
 
-## Three-minute demo
+```sh
+bash scripts/deploy-firebase.sh --project YOUR_PROJECT_ID
+```
 
-1. Open **View source notice**. The fictional notice permits return of catalog `LL-SYR-10`, individual lot `SY2608-A`.
-2. Click **Verify label** for 12 Hillview units. Enter `SY2608-A` and a label-verification reference. Save. The summary becomes 76 affected and 0 unresolved.
-3. For each affected row (40, 24, 12): **Record action**, enter quarantine evidence, and **Save action**. Then **Record return**, enter a supplier receipt reference, and save.
-4. **Complete response**, enter the final review record, attest coverage and **Complete and lock response**.
-5. Open **Evidence packet**, download JSON/CSV, or print/save PDF. **Activity** shows the event chain.
-6. **Reset demo** restores the practice data after an explicit confirmation. Export anything you want to keep first.
+The command provisions Firebase Hosting and Authentication, a dedicated Firestore database named `lotline`, and a Cloud Run backend. It builds in Cloud Build, publishes HTTPS, and checks the live workflow. No downloaded service-account key, separate Firebase CLI login, or local Docker installation is required.
 
-Every product, clinic and physical action in this scenario is fictional. The app does not contact suppliers or move stock.
+The preferred address is `https://lotline.web.app`. If that name is unavailable, the deployer tries `https://lotline-PROJECT_NUMBER.web.app`. The final address is printed after deployment; a particular hostname is not guaranteed.
 
-## Inventory contract
+**Deployment requires setup permissions and can incur usage charges.** Cloud Run is configured with zero minimum and two maximum instances. That limits one part of the deployment; it is not a spending cap or a free-hosting guarantee. See the [Firebase deployment guide](docs/FIREBASE.md) for prerequisites, costs, resource names, and troubleshooting.
 
-CSV headers, in any order:
+## Inventory format
+
+CSV columns, in any order:
 
 ```csv
 id,product,manufacturer,catalog,gtin,lot,location,quantity,unit
-NEW-001,Sterile syringe,Northstar Medical (fictional),LL-SYR-10,,SY2608-A,Lakeside,10,each
+STOCK-001,Example device,Example manufacturer,CAT-100,,LOT-001,Main stockroom,10,each
 ```
 
-Use unique stable stock IDs. Imports append distinct physical stock to the current snapshot; never import the same stock under new IDs. Quantities must be positive integers in **each**, not boxes. Convert packaging quantities before import. Quote embedded commas/newlines. Preserve leading zeroes. Common missing markers such as blank, `N/A` and `unknown` remain unresolved when they prevent matching. The [example CSV](public/samples/inventory-template.csv) is ready to use.
+The row above is illustrative. Import only nonpatient inventory you are authorized to manage.
 
-## Supported scope and deliberate limits
+- Use stable, unique stock IDs. Imports append stock; do not re-import the same physical units under different IDs.
+- Quantities are positive whole numbers in `each`, not boxes. Convert and verify packaging quantities before importing.
+- Preserve leading zeroes in GTINs. Supported GS1 text parsing and check-digit validation help with identifier entry; universal barcode-scanner compatibility is not implied.
+- Blank or placeholder identifiers remain unresolved when they prevent assessment.
+- The workspace accepts up to 500 stock records. Quote commas and line breaks inside CSV values.
 
-- One catalog and/or one individual-unit GTIN for the same product per response. Verify manufacturer identity separately from the recalling distributor.
-- Exact enumerated lots, or an explicit all-lots declaration. Ranges, wildcard expressions and multi-product notices require separate reviewed responses. Serial-number recalls and nested-package exceptions are outside this MVP.
-- On-hand unused stock only. Patient traceability, used products, replacement-product decisions, device repairs/corrections and clinical advice are outside scope.
-- Overlapping recalls cannot both record physical actions on the same stock ID. A shared-disposition model is future work.
-- Stock label edits are locked after physical actions. Imports are blocked once a response is completed; start a new practice evaluation for a corrected snapshot.
-- Account workspaces are private to one signed-in user. Organization memberships, group roles and cross-user collaboration are **not** implemented.
-- Evidence entries are operator attestations with references, not uploaded attachments or independently verified events. The digest is not a digital signature, external notarization or proof of physical action.
-- The FDA lookup is an optional reference convenience. Verify the latest manufacturer notice and amendments. It is not a complete alert feed or a clinical decision service.
-- Evaluation limits: 500 stock records, 20 responses, 2,000 audit events; 250 KB request body, 200 KB CSV input, and 1.5 MB serialized workspace capacity.
+Use the [inventory template](public/samples/inventory-template.csv) as the starting point.
 
-**Status:** deployed evaluation MVP; not clinically validated or approved for live patient-care operations. No HIPAA/GDPR compliance, reduction in harm, paid traction, or organizer-template compliance is claimed. Production use requires customer discovery, supervised validation, organizational access, retention/backups, monitored operations and security review.
+## Supported response scope
 
-## Architecture
+One catalog and/or one individual-unit GTIN for the same product, with exact enumerated lots or an explicitly reviewed all-lots scope. Manufacturer identity and packaging level must be verified. Complex ranges, wildcard expressions, serial-number recalls, multiple products, and nested-package exceptions require handling outside the supported simple scope.
+
+The workflow covers **on-hand, unused stock**. It does not make treatment decisions or track patients and already-used devices. Operator evidence records what was reported; it does not independently confirm events in the stockroom or contact a supplier.
+
+Completed responses are locked. Stock labels cannot change after physical actions, and overlapping responses cannot both record movement for the same stock ID. Imports are blocked after completion to keep that snapshot consistent. A new inventory-cycle/archive workflow is not yet provided; use this release for a bounded response exercise. Workspace limits include 20 responses, 2,000 audit events, and bounded request and storage sizes.
+
+## Accounts and data
+
+Firebase Authentication establishes identity. The backend verifies the session and stores account-scoped state in the named `lotline` Firestore database. Browser storage is not the authoritative inventory database. Anonymous access is for the demo; clearing browser data may remove access to an anonymous identity.
+
+The inventory workspace starts empty and remains separate from the demo. Switching views does not reset either workspace. Only the sample demo has a reset control; it cannot erase your inventory.
+
+Do not enter patient names, clinical histories, or other patient information. Before operational adoption, define your organization's source-review, access, retention, backup, and verification responsibilities. No clinical-effectiveness or regulatory-compliance claim is made.
+
+## Development and verification
+
+The core assessment logic is in `lib/lotline/domain.ts`; `actions.ts` validates state transitions. Firebase adapters use verified sessions and Firestore transactions. `deploy/firebase/stage.py` builds a standalone Next.js tree from an allowlist and applies the Firebase adapters without modifying the source checkout.
+
+```sh
+npm ci
+npm test
+npm run typecheck
+```
+
+See [testing](docs/TESTING.md) for the current results and reproducible browser/API checks. Deployment builds the Firebase target in Cloud Build. A successful source build alone does not verify cloud permissions, auth provider configuration, or the live database; the deployer also runs smoke checks.
 
 ```mermaid
 flowchart LR
-  CSV[Stock CSV / supported GS1 text] --> V[Validation]
-  FDA[Optional FDA reference lookup] --> H[Human scope approval]
-  V --> M[Exact scope assessment]
-  H --> M
-  M --> A[Affected / review / outside scope]
-  A --> Q[Quarantine and permitted disposition]
-  Q --> G[Completion gate + coverage attestation]
-  G --> E[Evidence JSON / CSV / printable PDF]
-  Q --> D[(Account-scoped D1 + revision check)]
-  D --> E
+  U[Desktop or mobile browser] --> H[Firebase Hosting]
+  U --> A[Firebase Authentication]
+  H --> R[Cloud Run / Next.js]
+  R --> V[Review + deterministic assessment]
+  V --> Q[Quarantine + permitted disposition]
+  Q --> F[(Account-scoped Firestore)]
+  F --> E[Evidence JSON / CSV / printable record]
 ```
 
-The matching engine in `lib/lotline/domain.ts` is pure. `actions.ts` validates and applies transitions. `storage.ts` uses prepared D1 statements and a revision-checked atomic update. API routes authenticate every request. `app/workbench.tsx` renders the same stored state used by exports.
+## Product direction
 
-See [product and business case](docs/PRODUCT.md), [security model](docs/SECURITY.md), [testing](docs/TESTING.md), [sources](docs/SOURCES.md), and [deployment](docs/DEPLOYMENT.md).
+The initial focus is small US clinic groups and distributors that support them. The pricing experiment is **US$99 per group per month for up to three sites, plus US$19 per additional site**. This is a hypothesis to test, not an offered subscription or validated willingness to pay. See the [product and business case](docs/PRODUCT.md).
 
-## Submission materials
-
-The [submission folder](submission/) contains the supplemental pitch, Devpost copy, word-for-word demo script, recording guide, timed captions and internal rubric review. The official organizer template was not publicly downloadable. Transfer the required sections before submitting; these files do not claim template compliance.
+Useful next steps include shared organization roles, source amendments, evidence attachments, and a shared-disposition model for overlapping recalls. Customer research and supervised workflow validation should determine their order.
 
 ## License
 
-MIT. Third-party dependencies retain their own licenses. FDA source material is linked and attributed. No FDA, GS1, clinic, distributor or hackathon endorsement is implied.
+MIT. Third-party dependencies retain their own licenses. Public source material is linked in [sources](docs/SOURCES.md). No FDA, GS1, clinic, or distributor endorsement is implied.

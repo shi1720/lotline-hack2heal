@@ -1,3 +1,4 @@
+import { workspaceScope } from "@/lib/lotline/scope";
 import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { readWorkspace } from "@/lib/lotline/storage";
 import {
@@ -11,11 +12,14 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const user = await getChatGPTUser();
+    const scope = workspaceScope(request);
+    if (scope === "inventory" && user?.isAnonymous) return Response.json({error:"Sign in with an email account."},{status:403});
     if (!user)
       return Response.json({ error: "Sign in to export." }, { status: 401 });
     const { workspace: w, revision } = await readWorkspace(
       user.userId,
       user.displayName,
+      scope,
     );
     const params = new URL(request.url).searchParams;
     const r = w.recalls.find((r) => r.id === params.get("recall"));
@@ -67,7 +71,7 @@ export async function GET(request: Request) {
       formatVersion: 1,
       exportedAt: new Date().toISOString(),
       revision,
-      mode: "evaluation",
+      mode: scope,
       notice:
         "Local response record only. Does not terminate an FDA recall, certify safety, or prove physical actions independently. Evidence text is operator-attested.",
       recall: r,

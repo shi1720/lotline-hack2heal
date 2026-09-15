@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 export type ChatGPTUser = {
   userId: string;
+  isAnonymous?: boolean;
   displayName: string;
   email: string;
   fullName: string | null;

@@ -12,7 +12,20 @@ npm run build
 
 The earlier independent review found three material classes of issue (disposition permissions, unsupported product/lot combinations, and replay expiry). The implemented guards and tests are regressions for those actual findings.
 
-## Browser and API journey
+## Firebase production build and account flows
+
+Requires Node 22, Python 3, Java 21, and Playwright Chromium (`npx playwright install chromium`). Run:
+
+```sh
+bash scripts/test-firebase.sh
+python3 -m unittest discover -s tests -p 'test_firebase_deploy.py'
+```
+
+This builds the standalone Cloud Run application and runs it with real Firebase Authentication and named Firestore emulators. No cloud project or paid API key is needed. Port 8080/8180/9199 must be free. Emulator identities and records are disposable synthetic test data.
+
+The recorded Firebase run passed the same 16 browser/API checks below, plus 9 account/inventory checks: email sign-up, empty inventory, custom CSV persistence, human-reviewed custom recall and export, isolated demo/inventory modes, forbidden inventory reset, responsive layouts at 360/390/768/1440 px, logout and password-error recovery, cross-identity access denial, and generation of a password-reset action. Related assertions are grouped into the 9 checks. Password-reset emulator success does not verify real email delivery.
+
+## Original Sites browser and API journey
 
 With `npm run dev` already running:
 

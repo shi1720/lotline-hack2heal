@@ -72,6 +72,7 @@ import {
   summary,
   parseCsv,
   parseGs1,
+  seed,
   type Workspace,
   type Recall,
   type Stock,
@@ -172,7 +173,8 @@ function CheckField({
     </label>
   );
 }
-export default function Workbench() {
+export default function Workbench({scope="demo",signInPath="/signin-with-chatgpt?return_to=/",accountControl}:{scope?:"demo"|"inventory";signInPath?:string;accountControl?:ReactNode}) {
+  const apiWorkspace = `/api/workspace?scope=${scope}`;
   const [data, setData] = useState<State | null>(null),
     [loadError, setLoadError] = useState(""),
     [busy, setBusy] = useState(false),
@@ -216,7 +218,7 @@ export default function Workbench() {
     >("returned");
   const load = useCallback(async () => {
     try {
-      const response = await fetch("/api/workspace");
+      const response = await fetch(apiWorkspace);
       const d = (await response.json()) as State & { error?: string };
       if (!response.ok) throw new Error(d.error);
       setData(d);
@@ -226,7 +228,7 @@ export default function Workbench() {
         e instanceof Error ? e.message : "Could not load workspace.",
       );
     }
-  }, []);
+  }, [apiWorkspace]);
   useEffect(() => {
     void load();
   }, [load]);
@@ -235,7 +237,7 @@ export default function Workbench() {
     setBusy(true);
     setError("");
     try {
-      const response = await fetch("/api/workspace", {
+      const response = await fetch(apiWorkspace, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -352,11 +354,12 @@ export default function Workbench() {
     }
   };
   const w = data?.workspace,
-    r = w?.recalls.find((r) => r.id === selected) ?? w?.recalls[0],
-    totals = w && r ? summary(w, r) : null;
+    activeRecall = w?.recalls.find((r) => r.id === selected) ?? w?.recalls[0],
+    r = activeRecall ?? {...seed("","").recalls[0],id:"__empty",title:"",catalogs:[],gtins:[],lots:[],allLots:false},
+    totals = w ? summary(w, r) : null;
   useWebMcp(
     () => {
-      if (!w || !r || !totals) throw new Error("Workspace is not ready.");
+      if (!w || !activeRecall || !totals) throw new Error("Workspace is not ready.");
       return {
         reference: r.reference,
         summary: totals,
@@ -381,7 +384,7 @@ export default function Workbench() {
       return { opened: true, stockId: s.id, saved: false };
     },
   );
-  if (!w || !r || !totals)
+  if (!w || !totals)
     return (
       <div className="loading-screen">
         <div className="brand-symbol">
@@ -392,7 +395,7 @@ export default function Workbench() {
           <>
             <p role="alert">{loadError}</p>
             <Button onClick={load}>Retry loading</Button>
-            <a href="/signin-with-chatgpt?return_to=/" target="_top">
+            <a href={signInPath} target="_top">
               Sign in
             </a>
           </>
@@ -431,10 +434,12 @@ export default function Workbench() {
           <span className="brand-subtitle">Recall response</span>
         </a>
         <div className="workspace-pill">
-          Northstar clinics <span>Private evaluation workspace</span>
+          {scope === "demo" ? "Sample clinic group" : "Your inventory"}<span>Private workspace</span>
         </div>
+        {accountControl}
       </header>
       <div className="workspace">
+        <nav className="workspace-nav" aria-label="Workspace"><a href="/?scope=inventory" aria-current={scope === "inventory" ? "page" : undefined}>Your inventory</a><a href="/?scope=demo" aria-current={scope === "demo" ? "page" : undefined}>Sample demo</a></nav>
         <div className="eyebrow">OPERATIONS / RECALL DESK</div>
         <div className="page-heading">
           <div>
@@ -458,12 +463,9 @@ export default function Workbench() {
         </div>
         <div className="demo-strip">
           <ShieldCheck size={17} />
-          <strong>Practice workspace</strong>
-          <span>
-            Use fictional stock only. No patient information. Physical actions
-            require human verification.
-          </span>
-          <button
+          <strong>{scope === "demo" ? "Sample demo" : "Inventory workspace"}</strong>
+          <span>{scope === "demo" ? "Fictional stock for practice. Your inventory is kept separately." : "Import unused stock records and review a current source notice. No patient information."} Physical actions require human verification.</span>
+          {scope === "demo" && <button
             className="demo-reset"
             onClick={() => {
               setError("");
@@ -473,13 +475,21 @@ export default function Workbench() {
           >
             <RotateCcw size={14} />
             Reset demo
-          </button>
+          </button>}
         </div>
         {loadError && (
           <p role="alert" className="error-box">
             {loadError}
           </p>
         )}
+        {!activeRecall ? <section className="onboarding-card">
+          <div className="eyebrow">GET STARTED</div><h2>Your inventory workspace is ready.</h2>
+          <p>Import your stock export, then open a recall using an FDA reference or a source notice you have reviewed.</p>
+          <ol><li><strong>1. Add inventory</strong><span>Use the CSV template. Keep product identifiers, lot numbers and individual-unit quantities.</span></li><li><strong>2. Review a notice</strong><span>Confirm its product, affected lots and handling instructions before matching.</span></li><li><strong>3. Account for stock</strong><span>Resolve unknowns, record actions and export the response record.</span></li></ol>
+          <div className="heading-actions"><Button variant="outline" onClick={()=>open("import")}>Import stock CSV</Button><Button onClick={()=>open("recall")}>Open first recall</Button></div>
+          <p className="onboarding-count">{w.stock.length} stock records imported</p>
+          {w.stock.length > 0 && <div className="inventory-preview">{w.stock.map(s=><article key={s.id}><strong>{s.product}</strong><span>{s.location} · {s.catalog} · Lot {s.lot || "not recorded"}</span><b>{s.quantity} {s.unit}</b></article>)}</div>}
+        </section> : <>
         <div className="recall-switch">
           <Select value={r.id} onValueChange={setSelected}>
             <SelectTrigger aria-label="Active recall">
@@ -827,13 +837,13 @@ export default function Workbench() {
                     </div>
                     <div className="export-actions">
                       <Button asChild>
-                        <a href={`/api/export?recall=${r.id}`}>
+                        <a href={`/api/export?scope=${scope}&recall=${r.id}`}>
                           <Download size={16} />
                           Download evidence JSON
                         </a>
                       </Button>
                       <Button variant="outline" asChild>
-                        <a href={`/api/export?recall=${r.id}&format=csv`}>
+                        <a href={`/api/export?scope=${scope}&recall=${r.id}&format=csv`}>
                           Export stock CSV
                         </a>
                       </Button>
@@ -918,9 +928,10 @@ export default function Workbench() {
             </small>
           </aside>
         </div>
+        </>}
         <footer className="page-footer">
           Lotline <span>Evidence before closure.</span>
-          <span>Shivam Gupta · Hack2Heal 2.0</span>
+          <span>Created by Shivam Gupta</span>
         </footer>
       </div>
       <Dialog
@@ -1289,7 +1300,7 @@ export default function Workbench() {
                 <CircleAlert size={17} />
                 <p>
                   Review inner and outer package labels. A mismatch does not
-                  prove a product is safe. This MVP supports unused stock
+                  prove a product is safe. Lotline supports unused stock
                   removal workflows, not device corrections or patient
                   follow-up.
                 </p>

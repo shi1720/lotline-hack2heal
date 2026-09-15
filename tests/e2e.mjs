@@ -1,6 +1,7 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
+const firebase = process.env.LOTLINE_TEST_FIREBASE === "1";
 const base = process.env.LOTLINE_TEST_URL ?? "http://localhost:5173";
 if (!["localhost", "127.0.0.1"].includes(new URL(base).hostname))
   throw new Error(
@@ -33,9 +34,11 @@ await p.addInitScript(() => {
   });
   window.__lotlineTools = registry;
 });
-await p.goto(base + "/signin-with-chatgpt?return_to=/", {
-  waitUntil: "networkidle",
-});
+if (firebase) {
+  await p.goto(base + '/signin');
+  await p.getByRole('button',{name:'Try the sample demo'}).click();
+  await p.getByRole('button',{name:'View source notice'}).waitFor();
+} else await p.goto(base + "/signin-with-chatgpt?return_to=/", {waitUntil:"networkidle"});
 const read = async () =>
   await (await ctx.request.get(base + "/api/workspace")).json();
 const post = async (
@@ -298,7 +301,7 @@ await writeFile(
   JSON.stringify(
     {
       testedAt: new Date().toISOString(),
-      environment: "Local Vinext with D1 and loopback auth simulator",
+      environment: firebase ? "Standalone Next.js with Firebase Auth and Firestore emulators" : "Local Vinext with D1 and loopback auth simulator",
       coreTests: 48,
       browserChecks: checks,
       errors,

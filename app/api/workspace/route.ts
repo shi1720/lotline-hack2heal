@@ -1,3 +1,4 @@
+import { workspaceScope } from "@/lib/lotline/scope";
 import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { readWorkspace, saveWorkspace } from "@/lib/lotline/storage";
 import { actionSchema, applyAction } from "@/lib/lotline/actions";
@@ -29,9 +30,11 @@ function failure(e: unknown) {
     { status: 503, headers },
   );
 }
-export async function GET() {
+export async function GET(request:Request) {
   try {
     const user = await getChatGPTUser();
+    const scope = workspaceScope(request);
+    if (scope === "inventory" && user?.isAnonymous) return Response.json({error:"Sign in with an email account to use your inventory."},{status:403,headers});
     if (!user)
       return Response.json(
         { error: "Sign in to open your workspace." },
@@ -39,7 +42,7 @@ export async function GET() {
       );
     return Response.json(
       {
-        ...(await readWorkspace(user.userId, user.displayName)),
+        ...(await readWorkspace(user.userId, user.displayName, scope)),
         actor: user.displayName,
       },
       { headers },
@@ -51,6 +54,8 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const user = await getChatGPTUser();
+    const scope = workspaceScope(request);
+    if (scope === "inventory" && user?.isAnonymous) return Response.json({error:"Sign in with an email account to use your inventory."},{status:403,headers});
     if (!user)
       return Response.json(
         { error: "Sign in to save changes." },
@@ -84,7 +89,8 @@ export async function POST(request: Request) {
         action: actionSchema,
       })
       .parse(payload);
-    const current = await readWorkspace(user.userId, user.displayName);
+    if (scope === "inventory" && envelope.action.type === "reset") throw new DomainError("Demo reset cannot change your inventory.",403);
+    const current = await readWorkspace(user.userId, user.displayName, scope);
     if (
       current.workspace.processed.includes(envelope.requestId) ||
       current.workspace.audit.some((e) => e.id === envelope.requestId) ||
@@ -116,6 +122,7 @@ export async function POST(request: Request) {
       user.userId,
       workspace,
       current.revision,
+      scope,
     );
     return Response.json(
       { workspace, revision, actor: user.displayName },

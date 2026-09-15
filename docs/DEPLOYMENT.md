@@ -1,17 +1,11 @@
 # Deployment
 
-The delivered app is configured for Sites hosting, which supplies the private authentication gateway, Cloudflare Worker and D1 binding. `.openai/hosting.json` records the Site identity and logical `DB` binding. The source repository is mirrored to GitHub for review and reproducibility.
+The public deployment target is **Firebase Hosting + Cloud Run**, with Firebase Authentication and a dedicated Firestore database. Follow [the single-command Firebase guide](FIREBASE.md).
 
-## Local setup
+The Firebase staging step replaces the original Sites authentication and D1 adapters. It builds a standalone Next.js application and never accepts identity headers as authentication.
 
-`npm ci`, `npm run build`, `npm run db:migrate:local`, then `npm run dev`.
+## Original Sites target
 
-The migration helper points Wrangler at `drizzle/` using an ignored generated local config. It tracks applied migrations and can be run again safely. Do not replay SQL manually on a persistent production store.
+The repository also retains its original Sites/Vinext target for development. Use `npm ci`, `npm run build`, `npm run db:migrate:local`, then `npm run dev`. Open the printed loopback URL and use the local test identity. The Sites gateway owns production identity headers. Never expose the raw Worker or development simulator publicly.
 
-## Hosting requirements
-
-Use the Sites publishing workflow with an exact source commit and built artifact. The hosted gateway must own and validate `oai-authenticated-user-*` headers. No secret API keys are necessary for the core demo. Never publish the development simulator or a raw unauthenticated Worker endpoint.
-
-The supplied Site is owner-private by default. A public GitHub repository or private deployment does not automatically grant judges access to the app. Before a submission, either arrange appropriate Site access or provide the demonstration video and local run instructions. Do not claim a URL is judge-accessible until tested from a separate account/session.
-
-The saved development configuration is not a general multi-tenant production deployment recipe. Additional access roles, retention, backups, rate limits and monitored operation are requirements for a real customer deployment.
+Firebase does not depend on the Sites gateway, D1, or a ChatGPT account. It uses its own verified Firebase sessions, and all inventory stays in the named `lotline` Firestore database. The two deployments do not share stored data.

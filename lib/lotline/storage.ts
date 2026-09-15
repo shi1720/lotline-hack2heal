@@ -1,5 +1,6 @@
 import { env } from "cloudflare:workers";
 import { seed, audit, DomainError, type Workspace } from "./domain";
+import { emptyWorkspace, workspaceKey, type WorkspaceScope } from "./scope";
 function db() {
   if (!env.DB)
     throw new DomainError(
@@ -8,19 +9,20 @@ function db() {
     );
   return env.DB;
 }
-export async function readWorkspace(owner: string, actor: string) {
+export async function readWorkspace(owner: string, actor: string, scope:WorkspaceScope = "demo") {
+  owner = workspaceKey(owner,scope);
   let row = await db()
     .prepare("SELECT state, revision FROM workspaces WHERE owner = ?")
     .bind(owner)
     .first<{ state: string; revision: number }>();
   if (!row) {
     const now = new Date().toISOString();
-    const w = seed(actor, now);
+    const w = scope === "inventory" ? emptyWorkspace() : seed(actor, now);
     await audit(
       w,
       actor,
       "created",
-      "Created fictional evaluation workspace. Sample scope is pre-reviewed for this exercise.",
+      scope === "inventory" ? "Created empty inventory workspace." : "Created fictional evaluation workspace. Sample scope is pre-reviewed for this exercise.",
       now,
       crypto.randomUUID(),
     );
@@ -45,7 +47,9 @@ export async function saveWorkspace(
   owner: string,
   workspace: Workspace,
   revision: number,
+  scope:WorkspaceScope = "demo",
 ) {
+  owner = workspaceKey(owner,scope);
   const serialized = JSON.stringify(workspace);
   if (new TextEncoder().encode(serialized).byteLength > 1_500_000) {
     throw new DomainError(

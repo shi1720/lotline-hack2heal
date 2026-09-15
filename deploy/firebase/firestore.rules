@@ -1,0 +1,7 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only the IAM-authenticated backend may access this dedicated database.
+    match /{document=**} { allow read, write: if false; }
+  }
+}
