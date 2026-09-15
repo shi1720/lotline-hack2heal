@@ -8,7 +8,7 @@ Lotline targets the work after a recall notice: identify affected stock, surface
 
 ## Competitive reality
 
-ECRI already offers supply alerts, inventory-related workflows and response tracking. GHX covers inventory and supply-chain traceability. Lotline does not claim to invent recall management. Its proposed wedge is a small, low-friction workspace for groups working from basic stock exports, with missing identifiers and closure conditions made explicit. No competitor price or feature absence is asserted without evidence.
+Staritas now includes ECRI’s former recall-management business. Historical ECRI materials document supply alerts and response tracking. GHX offers inventory and supply-chain tools; capabilities depend on the product and region. See the dated source boundaries in [SOURCES.md](SOURCES.md). Lotline does not claim to invent recall management. Its proposed wedge is a small, low-friction workspace for groups working from basic stock exports, with missing identifiers and closure conditions made explicit. No competitor price or feature absence is asserted without evidence.
 
 ## Pricing experiment
 

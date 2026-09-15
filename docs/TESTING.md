@@ -46,4 +46,6 @@ Local migrations were also applied twice to a fresh temporary D1 store: the firs
 
 ## What these checks do not establish
 
-No patient outcome, clinical safety, customer ROI, native WebMCP browser availability, regulatory compliance, or two-real-user hosted identity isolation was tested. The current system is an evaluation MVP, not an approved live clinical workflow. Hashes are consistency evidence rather than a digital signature.
+A follow-up hosted smoke check on 15 September verified the owner’s workspace loads, native in-app browser WebMCP can read the response and stage the label form without saving, and a synthetic label update survives full reload with 76 affected and 0 unresolved units. Native integration availability is browser-dependent.
+
+No patient outcome, clinical safety, customer ROI, regulatory compliance, or two-real-user hosted identity isolation was tested. The current system is an evaluation MVP, not an approved live clinical workflow. Hashes are consistency evidence rather than a digital signature.

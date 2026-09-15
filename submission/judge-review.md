@@ -11,7 +11,7 @@ This can be competitive on clarity and technical discipline. Winning cannot be i
 ## Submission gates precede scoring
 
 1. The organizer's official presentation template is mandatory. The current deck explicitly discloses that it is supplemental. A beautiful supplemental deck does not cure a format violation.
-2. Round-one September 10 and overall September 18 dates conflict in the supplied public guidance. Participation/shortlisting and the applicable current round must be established, not assumed.
+2. The rules audit found an organizer extension of registration and preliminary submissions to September 18, 2026. Use the earlier platform cutoff, 11:45 PM IST, operationally. Older September 10 copy remains stale. Registration and personal eligibility still require completion. See [the public resources page](https://hack2heal.devpost.com/resources) and the organizer extension recorded in the rules audit.
 3. Student enrollment and institution details remain personal facts requiring truthful confirmation. Do not invent them or imply the AI assistant is an eligible student teammate.
 
 ## Scores
@@ -20,7 +20,7 @@ Scores use a 1–5 scale with equal weighting because the published rubric suppl
 
 | Criterion | Score | Why |
 |---|---:|---|
-| Innovation & Originality | 3.5 | The missing-lot failure case and explicit completion conditions are a memorable product focus. ECRI, GHX and existing recall services already cover adjacent matching and response workflows. Small-clinic differentiation is plausible but unvalidated. |
+| Innovation & Originality | 3.5 | The missing-lot failure case and explicit completion conditions are a memorable product focus. Staritas (the former ECRI recall business), GHX and existing recall services already cover adjacent matching and response workflows. Small-clinic differentiation is plausible but unvalidated. |
 | Problem Relevance | 4.5 | FDA examples establish real inventory checks, quarantine, downstream notice and response duties. The product maps to concrete work. Research does not yet establish the frequency or cost of the problem in its proposed small-clinic segment. |
 | Impact Potential | 3.8 | Better accounting could improve operations and support safety. No pilot demonstrates better response time, fewer missed items or reduced patient harm. The pitch appropriately labels these as hypotheses. |
 | Feasibility & Scalability | 4.0 | A complete account-persisted MVP, CSV input and a narrow deterministic scope are feasible. Source curation, incomplete inventory, shared organization permissions and customer support limit readiness to scale. |
@@ -79,7 +79,7 @@ Authentication and D1 persistence make this materially stronger than a browser-o
 
 ## Q&A most likely to expose weakness
 
-- **Why not ECRI or GHX?** Existing services cover important adjacent workflows. Lotline is testing whether a narrower setup for small groups, fed by simple stock exports, offers enough value. That differentiation is not yet validated.
+- **Why not Staritas or GHX?** Existing services cover important adjacent workflows. Lotline is testing whether a narrower setup for small groups, fed by simple stock exports, offers enough value. That differentiation is not yet validated.
 - **What if the clinic never records lots?** Lotline cannot reconstruct missing information. It keeps the record unresolved and supports physical label investigation. If a site cannot obtain enough traceability data, it may not be a fit.
 - **How do you know all affected products are present in the inventory file?** You do not. The receipt is scoped to the reviewed notice and imported stock snapshot. Inventory completeness needs a separate local check.
 - **What prevents false closure?** Logical guards stop completion with unresolved records or quantities and restrict permitted dispositions. They cannot independently verify physical actions or honest inputs.
@@ -89,3 +89,7 @@ Authentication and D1 persistence make this materially stronger than a browser-o
 ## Minimum final rehearsal
 
 Record a clean pass of the current app, time the spoken script with the actual clicks, confirm all fixture names and quantities match the screen, and review that the receipt does not imply clinical certification. The case should conclude with 76 recorded dispositions and zero unresolved records. The recording should show the genuine app states and preserve the synthetic-data label.
+
+## Final source-audit correction
+
+ECRI states that it spun its recall-management business into Staritas in April 2026. The current competitor reference should therefore be **Staritas (formerly ECRI)**. Historical ECRI material still demonstrates that automated matching and response tracking predate Lotline. [ECRI announcement](https://home.ecri.org/pages/announcement), [current Staritas site](https://staritas.com/), [ECRI historical workflow evidence](https://home.ecri.org/blogs/ecri-news/ecri-announces-recipients-of-2023-alerts-impact-award).

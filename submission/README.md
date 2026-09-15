@@ -1,7 +1,7 @@
 # Lotline — submission writing kit
 
 **Creator and product direction:** Shivam Gupta  
-**Status:** Prepared submission copy; not submitted. The mandatory organizer template has not been located. These files and any custom deck are drafts until their content is transferred into that template and eligibility is confirmed.
+**Status:** Project details saved in Devpost at 3/5 steps; not finally submitted. The mandatory organizer template has not been located. These files and any custom deck are drafts until their content is transferred into that template and eligibility is confirmed.
 
 ## Use these files
 
@@ -15,3 +15,5 @@
 - `acknowledgements.md` — truthful authorship and third-party disclosure.
 
 The materials distinguish the implemented account-scoped, server-persisted workflow from proposed shared organizational access and commercial hypotheses. The initial pricing experiment is US$99/group/month for up to three sites, plus US$19/additional site; it remains unvalidated. Synthetic demo data are not evidence of clinical impact. Before recording, follow the walkthrough once on the final build and confirm that every demonstrated step and export works.
+
+The complete silent screen recording is in `../video/lotline-silent-demo.mp4`, with voiceover assembly instructions beside it. A finished narration still requires Shivam’s recording.

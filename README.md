@@ -8,6 +8,13 @@ Created by **Shivam Gupta** for **Hack2Heal 2.0** with substantial AI assistance
 
 ![Lotline recall response workspace](docs/assets/overview.png)
 
+## Open the project
+
+- [Live evaluation app](https://lotline-clinic-recall.sg127977958.chatgpt.site) — owner-private; judge access has not been enabled.
+- [Three-minute silent demo](video/lotline-silent-demo.mp4) — real UI recording, ready for the supplied narration.
+- [Pitch PDF](submission/lotline-pitch.pdf) and [editable PowerPoint](submission/lotline-pitch.pptx) — supplemental draft awaiting the mandatory organizer template.
+- [Recording guide](submission/lotline-recording-guide.pdf), [verbatim script](submission/demo-script-3min.md) and [captions](submission/lotline-demo-captions.srt).
+
 ## Why it exists
 
 An alert cannot inspect a stockroom. A clinic still has to locate the right product and lot, investigate incomplete records, account for affected units, and document the response. Lotline makes the unfinished work explicit.

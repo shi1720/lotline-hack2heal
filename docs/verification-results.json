@@ -1,0 +1,43 @@
+{
+  "testedAt": "2026-09-15T05:50:01.594Z",
+  "environment": "Local Vinext with D1 and loopback auth simulator",
+  "coreTests": 48,
+  "browserChecks": [
+    "closure blocked on unresolved and undisposed stock",
+    "source snapshot view and modal dismissal",
+    "WebMCP tools register and validate using an emulated browser registry",
+    "label verification persists and turns 12 unknown units into affected stock",
+    "server persistence survives reload",
+    "quarantine and permitted return recorded through UI for 40, 24 and 12 units",
+    "76/76 disposition allows attested completion and locks response",
+    "JSON export checksum, disposition totals and printable evidence report",
+    "CSV reconciliation export",
+    "concurrent writers: one commit, one 409, no double accounting",
+    "unauthenticated and cross-origin requests rejected",
+    "malformed and oversized requests rejected",
+    "CSV validation error recovery and real import persist",
+    "live FDA record lookup populates review form without approving scope",
+    "390px mobile layout has no page overflow and label dialog works",
+    "no browser runtime errors"
+  ],
+  "errors": [],
+  "limitations": [
+    "Hosted identity isolation not tested with two real accounts",
+    "No clinical validation or measured customer impact"
+  ],
+  "productionDependencyAudit": {
+    "vulnerabilities": 0,
+    "command": "npm audit --omit=dev"
+  },
+  "hostedSmokeChecks": {
+    "date": "2026-09-15",
+    "url": "https://lotline-clinic-recall.sg127977958.chatgpt.site",
+    "account": "Site owner only",
+    "checks": [
+      "Live workspace loads behind Sites authentication",
+      "Native browser WebMCP read returns 64 affected, 12 unresolved, 30 outside scope",
+      "Native WebMCP stage opens STK-003 verification form without saving",
+      "Synthetic label update persists through full reload: 76 affected and 0 unresolved"
+    ]
+  }
+}
