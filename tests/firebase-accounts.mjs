@@ -59,6 +59,13 @@ assert.equal((await c2.request.get(base+'/api/workspace?scope=inventory')).statu
 assert.equal((await c2.request.get(base+'/api/export?scope=inventory&recall='+recall)).status(),403);
 assert.equal((await(await c2.request.get(base+'/api/workspace')).json()).workspace.stock.length,4);
 pass('A second anonymous identity cannot access registered inventory or its export');
+await p2.goto(base+'/signin');await p2.getByRole('button',{name:'Create an account',exact:true}).click();
+await p2.getByLabel('Email address').fill('second-'+email);await p2.getByLabel('Password',{exact:true}).fill(password);await p2.getByRole('button',{name:'Create account',exact:true}).click();await p2.getByRole('heading',{name:'Your inventory workspace is ready.'}).waitFor();
+assert.equal((await (await c2.request.get(base+'/api/workspace?scope=inventory')).json()).workspace.stock.length,0);
+assert.equal((await c2.request.get(base+'/api/export?scope=inventory&recall='+recall)).status(),404);
+assert.equal((await read()).workspace.stock.length,1);
+pass('Two registered accounts have separate inventory and cannot export each other’s recalls');
+
 await p.getByRole('button',{name:'Sign out',exact:true}).click();await p.waitForURL('**/signin');await p.getByRole('button',{name:'Forgot password?'}).click();await p.getByLabel('Email address').fill(email);await p.getByRole('button',{name:'Send reset link'}).click();await p.getByRole('status').waitFor();
 const oob=await(await fetch('http://127.0.0.1:9199/emulator/v1/projects/demo-lotline/oobCodes')).json();assert.ok(oob.oobCodes.some(x=>x.email===email&&x.requestType==='PASSWORD_RESET'));
 pass('Password-reset flow issues a Firebase reset action (emulator; no email delivery claim)');

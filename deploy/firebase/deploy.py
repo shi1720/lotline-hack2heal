@@ -57,7 +57,8 @@ def cloud(*args, **kwargs):
     return command('gcloud', *args, **kwargs)
 
 class Google:
-    def __init__(self):
+    def __init__(self, project=None):
+        self.project = project
         self.token = None
         self.token_at = 0
 
@@ -84,6 +85,7 @@ class Google:
         payload = data if raw else (json.dumps(data).encode() if data is not None else None)
         headers = {'Authorization':'Bearer '+self.token,
                    'Content-Type':'application/octet-stream' if raw else 'application/json'}
+        if self.project: headers['X-Goog-User-Project'] = self.project
         request = urllib.request.Request(url, data=payload, headers=headers, method=method)
         try:
             with urllib.request.urlopen(request, timeout=60) as response:
@@ -330,7 +332,7 @@ def main():
     revision = command('git','-C',str(ROOT),'rev-parse','HEAD').stdout.strip() + '-' + uuid.uuid4().hex[:8]
     log(f'Using project {project}. Provisioning Firebase Hosting, Auth, a dedicated Firestore database, Cloud Build and Cloud Run. Usage can incur charges.')
     cloud('services','enable',*APIS,'--project',project,'--quiet',capture=False)
-    google = Google()
+    google = Google(project)
     ensure_firebase(google,project)
     # Provision the default reserved auth handler before a custom Hosting site.
     # Never publish over the default site's existing release.
