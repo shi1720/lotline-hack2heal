@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-15T07:28:05.528Z",
+  "checkedAt": "2026-09-15T07:32:39.903Z",
   "checks": [
     "Email sign-up creates a genuinely empty inventory workspace",
     "Custom inventory import persists after reload before any recall exists",
@@ -8,6 +8,7 @@
     "360/390/768/1440px responsive workspaces and action dialogs",
     "Logout removes server access; wrong password rejected; login restores records",
     "A second anonymous identity cannot access registered inventory or its export",
+    "Two registered accounts have separate inventory and cannot export each other’s recalls",
     "Password-reset flow issues a Firebase reset action (emulator; no email delivery claim)"
   ],
   "errors": [],

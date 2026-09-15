@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-15T07:27:59.204Z",
+  "testedAt": "2026-09-15T07:32:33.596Z",
   "environment": "Standalone Next.js with Firebase Auth and Firestore emulators",
   "coreTests": 49,
   "browserChecks": [

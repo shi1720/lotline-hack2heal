@@ -335,5 +335,22 @@ class InfrastructureTests(OfflineTestCase):
         self.assertFalse(any("roles/editor" in args or "roles/owner" in args for args in calls))
 
 
+class CredentialHeadersTests(OfflineTestCase):
+    def test_user_credentials_include_selected_quota_project(self):
+        google = deploy.Google(PROJECT)
+        google.token = "synthetic-test-token"
+        google.token_at = deploy.time.monotonic()
+        response = Mock()
+        response.read.return_value = b"{}"
+        opened = Mock()
+        opened.__enter__ = Mock(return_value=response)
+        opened.__exit__ = Mock(return_value=False)
+        with patch.object(deploy.urllib.request, "urlopen", return_value=opened) as send:
+            google.request("GET", IDENTITY + f"projects/{PROJECT}/config")
+        request = send.call_args.args[0]
+        self.assertEqual(request.get_header("X-goog-user-project"), PROJECT)
+        self.assertEqual(request.get_header("Authorization"), "Bearer synthetic-test-token")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

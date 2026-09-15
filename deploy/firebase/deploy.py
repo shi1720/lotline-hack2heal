@@ -95,8 +95,8 @@ class Google:
         except urllib.error.HTTPError as error:
             body = error.read().decode(errors='replace')
             try: message = json.loads(body).get('error',{}).get('message',body)
-            except (ValueError, AttributeError): message = body[:1000]
-            raise ApiError(error.code, str(message)) from None
+            except (ValueError, AttributeError): message = 'Google returned a non-JSON server error. Retry after a short wait.'
+            raise ApiError(error.code, f'{method} {parsed.hostname}{parsed.path}: {message}') from None
 
     def optional(self, url):
         try: return self.request('GET',url)
@@ -343,8 +343,11 @@ def main():
     site = choose_site(google,project,number,args.site or saved_site)
     log(f'Hosting address: https://{site}.web.app')
     (ROOT/'.firebase-deploy-state.json').write_text(json.dumps({'project':project,'site':site,'revision':revision},indent=2))
+    log("Configuring Firebase accounts and the web application.")
     sdk = ensure_auth(google,project,site)
+    log("Preparing the dedicated inventory database and private access rules.")
     ensure_database(google,project)
+    log("Preparing the build and runtime service accounts.")
     runtime,builder,bucket = ensure_infrastructure(project)
     build_and_run(project,site,sdk,runtime,builder,bucket,revision)
     log('Publishing the Firebase HTTPS address.')
