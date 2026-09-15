@@ -8,7 +8,7 @@ Created by **Shivam Gupta**, with AI-assisted development. See [acknowledgements
 
 ![Lotline recall response workspace](docs/assets/overview.png)
 
-[Watch the narrated product walkthrough](video/lotline-narrated-demo.mp4) · [Read the deployment guide](docs/FIREBASE.md)
+[Try Lotline](https://lotline.web.app) · [Watch the narrated product walkthrough](https://youtu.be/pxqVQvZmAjE) · [Read the deployment guide](docs/FIREBASE.md)
 
 ## Start with the workflow
 

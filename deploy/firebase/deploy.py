@@ -119,6 +119,15 @@ class Google:
         if operation.get('error'): raise DeployError(str(operation['error']))
         return operation.get('response',{})
 
+def provision(action):
+    """Reconcile existing resources before retrying a possibly completed POST."""
+    for attempt in range(5):
+        try: return action()
+        except ApiError as error:
+            if attempt == 4 or error.status not in (409,429,500,502,503,504): raise
+            log('Google setup is still settling; rechecking resources before retrying.')
+            time.sleep(2**(attempt+1))
+
 def choose_site(google, project, number, requested=None):
     candidates = [requested] if requested else ['lotline',f'lotline-{number}']
     for site in candidates:
@@ -333,7 +342,7 @@ def main():
     log(f'Using project {project}. Provisioning Firebase Hosting, Auth, a dedicated Firestore database, Cloud Build and Cloud Run. Usage can incur charges.')
     cloud('services','enable',*APIS,'--project',project,'--quiet',capture=False)
     google = Google(project)
-    ensure_firebase(google,project)
+    provision(lambda: ensure_firebase(google,project))
     # Provision the default reserved auth handler before a custom Hosting site.
     # Never publish over the default site's existing release.
     choose_site(google,project,number,project)
@@ -344,9 +353,9 @@ def main():
     log(f'Hosting address: https://{site}.web.app')
     (ROOT/'.firebase-deploy-state.json').write_text(json.dumps({'project':project,'site':site,'revision':revision},indent=2))
     log("Configuring Firebase accounts and the web application.")
-    sdk = ensure_auth(google,project,site)
+    sdk = provision(lambda: ensure_auth(google,project,site))
     log("Preparing the dedicated inventory database and private access rules.")
-    ensure_database(google,project)
+    provision(lambda: ensure_database(google,project))
     log("Preparing the build and runtime service accounts.")
     runtime,builder,bucket = ensure_infrastructure(project)
     build_and_run(project,site,sdk,runtime,builder,bucket,revision)

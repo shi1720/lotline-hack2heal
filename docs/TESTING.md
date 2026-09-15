@@ -25,6 +25,8 @@ This builds the standalone Cloud Run application and runs it with real Firebase 
 
 The recorded Firebase run passed the same 17 browser/API checks below, plus 9 account/inventory checks: email sign-up, empty inventory, custom CSV persistence, human-reviewed custom recall and export, isolated demo/inventory modes, forbidden inventory reset, responsive layouts at 360/390/768/1440 px, logout and password-error recovery, cross-identity access denial, and generation of a password-reset action. Related assertions are grouped into the 9 checks. Password-reset emulator success does not verify real email delivery.
 
+**27 deployment contract tests passed**, including provisioning reconciliation, quota project headers, retry boundaries, resource preservation and authentication restrictions.
+
 ## Original Sites browser and API journey
 
 With `npm run dev` already running:
@@ -58,8 +60,14 @@ The recorded run passed **17 browser/API checks**:
 
 Local migrations were also applied twice to a fresh temporary D1 store: the first application succeeded and the second correctly found nothing to apply.
 
+## Live Firebase verification — 15 September 2026
+
+The public https://lotline.web.app deployment passed anonymous sign-in, durable stock updates, 76-unit reconciliation, evidence export and forged-identity-header rejection. Separate live API tests created two disposable email/password identities, signed both in, imported synthetic inventory for one account, verified isolation, and checked sign-out and unauthenticated rejection. Test identities were deleted afterward. Chrome also opened the guest workspace and passed the 390px overflow check.
+
+The in-app browser encountered a Firebase network error during anonymous authentication; Chrome succeeded. Use a normal supported browser if an embedded browser cannot reach Firebase Authentication. Actual password-reset email delivery has not been tested.
+
 ## What these checks do not establish
 
 A follow-up hosted smoke check on 15 September verified the owner’s workspace loads, native in-app browser WebMCP can read the response and stage the label form without saving, and a synthetic label update survives full reload with 76 affected and 0 unresolved units. Native integration availability is browser-dependent.
 
-No patient outcome, clinical safety, customer ROI, regulatory compliance, or two-real-user hosted identity isolation was tested. The current system is an evaluation MVP, not an approved live clinical workflow. Hashes are consistency evidence rather than a digital signature.
+No patient outcome, clinical safety, customer ROI, regulatory compliance, was tested. The current system is an evaluation MVP, not an approved live clinical workflow. Hashes are consistency evidence rather than a digital signature.

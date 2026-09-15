@@ -335,6 +335,25 @@ class InfrastructureTests(OfflineTestCase):
         self.assertFalse(any("roles/editor" in args or "roles/owner" in args for args in calls))
 
 
+class ProvisionRetryTests(OfflineTestCase):
+    def test_reconciles_after_uncertain_server_failure(self):
+        action = Mock(side_effect=[deploy.ApiError(502,"temporary"),{"ready":True}])
+        with patch.object(deploy.time,"sleep"):
+            self.assertEqual(deploy.provision(action),{"ready":True})
+        self.assertEqual(action.call_count,2)
+
+    def test_permission_failure_is_not_blindly_retried(self):
+        action = Mock(side_effect=deploy.ApiError(403,"permission denied"))
+        with self.assertRaises(deploy.ApiError): deploy.provision(action)
+        self.assertEqual(action.call_count,1)
+
+    def test_retry_budget_is_bounded(self):
+        action = Mock(side_effect=deploy.ApiError(503,"temporary"))
+        with patch.object(deploy.time,"sleep"), self.assertRaises(deploy.ApiError):
+            deploy.provision(action)
+        self.assertEqual(action.call_count,5)
+
+
 class CredentialHeadersTests(OfflineTestCase):
     def test_user_credentials_include_selected_quota_project(self):
         google = deploy.Google(PROJECT)

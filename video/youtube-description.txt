@@ -1,6 +1,7 @@
 A recall alert cannot inspect a stockroom. Lotline helps clinic operations teams turn a reviewed medical-device recall notice into an accountable stock response.
 
 Created by Shivam Gupta.
+Try Lotline: https://lotline.web.app
 Source code and Firebase deployment: https://github.com/shi1720/lotline-hack2heal
 
 In this walkthrough:
