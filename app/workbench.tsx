@@ -75,7 +75,6 @@ import {
   parseGs1,
   seed,
   type Workspace,
-  type Recall,
   type Stock,
 } from "@/lib/lotline/domain";
 import { useWebMcp } from "./use-webmcp";
@@ -231,6 +230,8 @@ export default function Workbench({scope="demo",signInPath="/signin-with-chatgpt
     }
   }, [apiWorkspace]);
   useEffect(() => {
+    // load commits the result of an asynchronous workspace request.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
   const change = async (action: Action) => {

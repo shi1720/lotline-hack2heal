@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 type Tool = {
   name: string;
   title: string;
@@ -19,7 +19,9 @@ export function useWebMcp(
   start: (id: string) => Promise<unknown>,
 ) {
   const callbacks = useRef({ read, start });
-  callbacks.current = { read, start };
+  useLayoutEffect(() => {
+    callbacks.current = { read, start };
+  }, [read, start]);
   useEffect(() => {
     const context = (document as Document & { modelContext?: Registry })
       .modelContext;
