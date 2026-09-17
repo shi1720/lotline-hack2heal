@@ -5,6 +5,15 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    // These views run across Firebase and Sites. Full document navigation
+    // reloads the workspace/auth session and does not depend on a Next router.
+    files: ["app/workbench.tsx", "deploy/firebase/overrides/app/account-menu.tsx"],
+    rules: {
+      "@next/next/no-html-link-for-pages": "off",
+      "@next/next/no-location-assign-relative-destination": "off",
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
